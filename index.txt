@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye Finansal Hafıza & Alım Gücü 3.0</title>
+    <meta name="description" content="Türkiye'nin ekonomik tarihçesi, 1998-2026 alım gücü karşılaştırmaları.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f8fafc; }
+        
+        select {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em;
+        }
+
+        .transition-smooth { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        .item-checkbox:checked + div {
+            background-color: #fff7ed; border-color: #f97316; color: #c2410c; font-weight: 600;
+        }
+        
+        /* News Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .news-ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+        
+        /* Share Button Styles */
+        .share-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
+            transition: all 0.2s; color: white;
+        }
+        .share-twitter { background-color: #1DA1F2; }
+        .share-twitter:hover { background-color: #0c85d0; }
+        .share-whatsapp { background-color: #25D366; }
+        .share-whatsapp:hover { background-color: #1ebc57; }
+        .share-linkedin { background-color: #0A66C2; }
+        .share-linkedin:hover { background-color: #084e96; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-orange-600 text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-sm">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">FİNANS<span class="text-orange-600">HAFIZA</span></h1>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
+                <a href="#analiz" class="hover:text-orange-600 transition-colors py-2">Analizler</a>
+                <a href="#gundem" class="hover:text-orange-600 transition-colors py-2">Gündem & Haberler</a>
+                <button onclick="openModal('premiumModal')" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-900 px-5 py-2 rounded-full transition-colors border border-transparent hover:border-slate-300">
+                    <i class="fa-solid fa-crown text-orange-500"></i>
+                    <span>Premium</span>
+                </button>
+            </div>
+            
+            <button class="md:hidden text-slate-600 text-xl"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <!-- Breaking News Bar -->
+    <div class="bg-slate-900 text-white text-xs py-2 overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 flex items-center">
+            <span class="bg-red-600 text-white px-2 py-0.5 rounded font-bold mr-4 shrink-0 animate-pulse">SON DAKİKA</span>
+            <div class="overflow-hidden w-full">
+                <div class="news-ticker-content">
+                    <span class="mr-8">📢 2026 Asgari Ücret Net 28.075 TL Olarak Belirlendi!</span>
+                    <span class="mr-8">📉 Muhalefet Lideri Özel: "39 Bin TL Altı Sefalet Ücretidir"</span>
+                    <span class="mr-8">🪙 Bitcoin (BTC) 3.8 Milyon TL Sınırını Zorluyor</span>
+                    <span class="mr-8">🚀 Ninja Squad Token (NST) 112 TL Seviyesini Gördü</span>
+                    <span class="mr-8">🏠 İstanbul'da Ortalama Kira 32.000 TL'ye Ulaştı</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow">
+
+        <!-- Intro -->
+        <div class="mb-10 text-center md:text-left">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Ekonomik Hafıza & Gündem</h2>
+            <p class="text-slate-500 text-lg max-w-2xl">Geçmişten bugüne alım gücü analizi ve güncel ekonomik veriler. <span class="text-orange-600 font-medium">(2026 Verileri Eklendi)</span></p>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 mb-10 relative overflow-hidden" id="analiz">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-slate-200 via-orange-500 to-slate-200"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-10 gap-6 items-end">
+                
+                <!-- Date Selector -->
+                <div class="md:col-span-3 w-full space-y-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Hesaplama Yılı</label>
+                    <div class="relative">
+                        <select id="yearSelect" class="w-full h-14 bg-slate-50 border border-slate-300 text-slate-900 text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
+                            <option value="1998">1998 (6 Sıfır Öncesi)</option>
+                            <option value="2002">2002 (Kriz Sonrası)</option>
+                            <option value="2010">2010 (İstikrar Dönemi)</option>
+                            <option value="2016">2016 (Kırılma Yılı)</option>
+                            <option value="2020">2020 (Pandemi)</option>
+                            <option value="2024">2024 (Geçen Yıl)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Salary Segment Selector -->
+                <div class="md:col-span-4 w-full space-y-2">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Gelir Grubu / Baz Maaş</label>
+                    <div class="relative">
+                        <select id="salarySelect" class="w-full h-14 bg-slate-50 border border-slate-300 text-slate-900 text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
+                            <option value="asgari">Asgari Ücret (Net)</option>
+                            <option value="emekli">En Düşük Emekli Maaşı</option>
+                            <option value="memur">Ortalama Memur Maaşı</option>
+                            <option value="doktor">Uzman Doktor (1/4)</option>
+                            <option value="polis">Polis Memuru (8/1)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="md:col-span-3 w-full">
+                    <button onclick="calculateData()" class="w-full h-14 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-bold rounded-xl shadow-lg hover:shadow-orange-500/30 transition-smooth flex justify-center items-center gap-3 text-lg">
+                        HESAPLA (vs 2026) <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Item Filters -->
+            <div class="mt-8 pt-6 border-t border-slate-100">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-4">Kıyaslanacak Veriler (Çoklu Seçim Yapabilirsiniz)</label>
+                <div class="flex flex-wrap gap-3" id="itemFilters">
+                    <!-- Filters injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder -->
+        <div id="placeholderState" class="text-center py-24 bg-white rounded-2xl border-2 border-dashed border-slate-200">
+            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <i class="fa-solid fa-chart-pie text-3xl text-slate-300"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-700">Analiz Başlatın</h3>
+            <p class="text-slate-400 mt-2">Lütfen yukarıdan bir yıl ve maaş grubu seçerek hesaplamayı başlatın.</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsArea" class="hidden animate-fade-in space-y-10">
+            
+            <!-- Share Section -->
+            <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <div class="text-sm font-bold text-slate-500 uppercase tracking-wider">
+                    <i class="fa-solid fa-share-nodes mr-2"></i> Analizi Paylaş
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="shareResult('twitter')" class="share-btn share-twitter">Twitter</button>
+                    <button onclick="shareResult('whatsapp')" class="share-btn share-whatsapp">WhatsApp</button>
+                    <button onclick="shareResult('linkedin')" class="share-btn share-linkedin">LinkedIn</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Charts Container -->
+            <div id="chartsContainer" class="space-y-8">
+                <!-- Charts or Warnings will be injected here -->
+            </div>
+
+            <!-- Detailed Grid Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="itemsGrid">
+                <!-- Small Cards injected here -->
+            </div>
+
+            <!-- News & Archive Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" id="gundem">
+                
+                <!-- Main News Feed -->
+                <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            Güncel Ekonomi Gündemi (Ocak 2026)
+                        </h3>
+                        <span class="text-xs text-slate-400">Canlı Veri (Simüle)</span>
+                    </div>
+                    
+                    <div class="divide-y divide-slate-100">
+                        <!-- News Item 1 -->
+                        <div class="p-5 hover:bg-slate-50 transition-colors group cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Asgari Ücret</span>
+                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 2 Saat Önce</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-lg group-hover:text-blue-600 transition-colors mb-2">2026 Asgari Ücret Net 28.075 TL Olarak Resmi Gazete'de</h4>
+                            <p class="text-sm text-slate-600 mb-3">Çalışma ve Sosyal Güvenlik Bakanlığı, 2026 yılı için geçerli olacak net asgari ücreti açıkladı. İşveren maliyeti 40 bin TL'yi aştı.</p>
+                            <div class="flex items-center gap-3 text-xs text-slate-500">
+                                <span><i class="fa-solid fa-chart-line mr-1"></i> %27 Artış</span>
+                                <span><i class="fa-solid fa-newspaper mr-1"></i> Kaynak: Resmi Gazete</span>
+                            </div>
+                        </div>
+
+                        <!-- News Item 2 -->
+                        <div class="p-5 hover:bg-slate-50 transition-colors group cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Siyaset & Ekonomi</span>
+                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 4 Saat Önce</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-lg group-hover:text-red-600 transition-colors mb-2">Muhalefetten Sert Tepki: "Açlık Sınırı 30 Bin TL İken Bu Rakam Kabul Edilemez"</h4>
+                            <p class="text-sm text-slate-600 mb-3">CHP Genel Başkanı Özgür Özel ve DEM Parti Eş Başkanları, yeni asgari ücretin 'sefalet ücreti' olduğunu belirterek 39 bin TL talebini yineledi.</p>
+                            <div class="flex items-center gap-3 text-xs text-slate-500">
+                                <span><i class="fa-solid fa-quote-left mr-1"></i> Sefalet Ücreti</span>
+                                <span><i class="fa-solid fa-newspaper mr-1"></i> Kaynak: Halk TV / Sözcü</span>
+                            </div>
+                        </div>
+
+                        <!-- News Item 3 -->
+                        <div class="p-5 hover:bg-slate-50 transition-colors group cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Kripto & Teknoloji</span>
+                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 30 Dakika Önce</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors mb-2">Ninja Squad Token (NST) Rekor Tazeledi: 112 TL'yi Aştı</h4>
+                            <p class="text-sm text-slate-600 mb-3">Türk kripto projesi NST, küresel borsalardaki hacim artışıyla birlikte TL bazında tüm zamanların en yüksek seviyesine yaklaştı.</p>
+                            <div class="flex items-center gap-3 text-xs text-slate-500">
+                                <span><i class="fa-solid fa-arrow-trend-up mr-1"></i> +%4.2</span>
+                                <span><i class="fa-solid fa-newspaper mr-1"></i> Kaynak: CoinMarketCap</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Archive Links & Feedback -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-link text-orange-600"></i> Kaynak Arşivi
+                        </h3>
+                        <ul class="space-y-3 text-sm">
+                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-building-columns w-4"></i> TCMB Enflasyon Hesaplayıcı</a></li>
+                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-chart-pie w-4"></i> TÜİK Madde Sepeti Arşivi</a></li>
+                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-gas-pump w-4"></i> Petrol Ofisi Fiyat Tarihçesi</a></li>
+                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-brands fa-bitcoin w-4"></i> CoinMarketCap Historical Data</a></li>
+                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-gavel w-4"></i> CSGB Asgari Ücret İstatistikleri</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                        <div class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Veri Hatası mı?
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4">Tarihsel verilerde bir yanlışlık fark ettiyseniz lütfen bize bildirin.</p>
+                        <button onclick="openModal('errorModal')" class="w-full bg-white border border-red-200 text-red-600 font-bold py-3 rounded-lg text-sm hover:bg-red-50 transition-colors shadow-sm">
+                            Hata Bildir
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-slate-500 max-w-3xl mx-auto leading-relaxed">
+                <i class="fa-solid fa-circle-check text-green-500 mr-1"></i>
+                <strong>Veri Kaynakları:</strong> TCMB, TÜİK, Petrol Ofisi Arşiv, Altınkaynak, CoinMarketCap ve Yerelsen Veriler. <br>
+                <span class="text-xs block mt-2 opacity-75">* 2005 öncesi veriler YTL dönüşümü yapılarak hesaplanmıştır. Kripto varlıklar için ilgili tarihteki açılış fiyatları baz alınır.</span>
+            </p>
+            <p class="text-sm font-bold text-slate-800 mt-6">FİNANS HAFIZA &copy; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Premium Modal -->
+    <div id="premiumModal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl transform scale-100 transition-all">
+            <button onclick="closeModal('premiumModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-5 rotate-3">
+                    <i class="fa-solid fa-file-invoice-dollar text-3xl text-orange-600"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-2">Profesyonel Rapor</h3>
+                <p class="text-slate-500 mb-8 leading-relaxed">Seçtiğiniz döneme ait detaylı analizleri, kaynakçalı PDF sunum formatında ücretsiz indirin.</p>
+                <form onsubmit="event.preventDefault(); alert('Rapor e-posta adresinize gönderildi!'); closeModal('premiumModal');" class="space-y-4">
+                    <input type="email" placeholder="E-posta adresiniz" class="w-full border border-slate-300 bg-slate-50 p-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required>
+                    <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition-colors">Raporu Gönder</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Reporting Modal -->
+    <div id="errorModal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl">
+            <button onclick="closeModal('errorModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+                    <i class="fa-solid fa-bug"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900">Hata Bildir</h3>
+            </div>
+            <form onsubmit="event.preventDefault(); alert('Geri bildiriminiz alındı. Teşekkürler!'); closeModal('errorModal');" class="space-y-4">
+                <textarea class="w-full border border-slate-300 bg-slate-50 p-3 rounded-xl text-sm h-32 outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Hangi veri hatalı?"></textarea>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-colors">Bildirimi Gönder</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        // Veriler 2026 Ocak ayı güncel piyasa verileridir.
+        // NST: ~112 TL, BTC: ~3.88M TL
+        
+        const historicalData = {
+            "1998": {
+                note: "6 Sıfır Öncesi",
+                salaries: { asgari: 29.1, emekli: 45, memur: 90, doktor: 180, polis: 110 }, 
+                items: {
+                    ceyrek: 3.8, benzin: 0.21, gram: 2.2, dolar: 0.26, euro: 0.30, ekmek: 0.04, 
+                    bira: 0.35, doner: 0.6, elektrik: 4, tavuk: 0.7, kuzu: 1.8, sut: 0.2, peynir: 1.0, 
+                    zeytin: 0.9, kira_ist: 70, ev_ist: 10000, 
+                    iphone: 0, bigmac: 0.6, btc: 0, nst: 0
+                }
+            },
+            "2002": {
+                note: "Kriz Sonrası",
+                salaries: { asgari: 184.25, emekli: 257, memur: 578, doktor: 1100, polis: 650 },
+                items: {
+                    ceyrek: 32, gram: 18, dolar: 1.5, euro: 1.6, benzin: 1.48, ekmek: 0.25, 
+                    bira: 1.5, doner: 2.5, elektrik: 30, tavuk: 3, kuzu: 8, sut: 1, peynir: 4, 
+                    zeytin: 3, kira_ist: 200, ev_ist: 45000, 
+                    iphone: 0, bigmac: 3, btc: 0, nst: 0
+                }
+            },
+            "2010": {
+                note: "İstikrar",
+                salaries: { asgari: 599.12, emekli: 750, memur: 1600, doktor: 2800, polis: 2000 },
+                items: {
+                    ceyrek: 115, gram: 65, dolar: 1.5, euro: 2.0, benzin: 3.68, ekmek: 0.75, 
+                    bira: 3, doner: 8, elektrik: 60, tavuk: 6, kuzu: 25, sut: 2, peynir: 12, 
+                    zeytin: 10, kira_ist: 750, ev_ist: 150000, 
+                    iphone: 1600, bigmac: 6, btc: 0.5, nst: 0 // BTC 2010'da vardı ama çok düşüktü, sembolik 0.5 TL
+                }
+            },
+            "2016": {
+                note: "Kırılma Yılı",
+                salaries: { asgari: 1300.99, emekli: 1400, memur: 2600, doktor: 4500, polis: 3400 },
+                items: {
+                    ceyrek: 200, gram: 125, dolar: 3.0, euro: 3.3, benzin: 5.05, ekmek: 1.25, 
+                    bira: 7, doner: 15, elektrik: 90, tavuk: 10, kuzu: 40, sut: 3, peynir: 20, 
+                    zeytin: 18, kira_ist: 1500, ev_ist: 350000, 
+                    iphone: 3500, bigmac: 10, btc: 2000, nst: 0
+                }
+            },
+            "2020": {
+                note: "Pandemi",
+                salaries: { asgari: 2324.70, emekli: 1800, memur: 4200, doktor: 7000, polis: 5500 },
+                items: {
+                    ceyrek: 750, gram: 450, dolar: 7.0, euro: 8.5, benzin: 6.20, ekmek: 2, 
+                    bira: 15, doner: 25, elektrik: 180, tavuk: 18, kuzu: 80, sut: 6, peynir: 45, 
+                    zeytin: 35, kira_ist: 2500, ev_ist: 600000, 
+                    iphone: 10000, bigmac: 20, btc: 60000, nst: 0
+                }
+            },
+            "2024": {
+                note: "Yüksek Enflasyon",
+                salaries: { asgari: 17002.12, emekli: 12500, memur: 34000, doktor: 60000, polis: 44000 },
+                items: {
+                    ceyrek: 4500, gram: 2600, dolar: 33, euro: 36, benzin: 42.5, ekmek: 10, 
+                    bira: 75, doner: 250, elektrik: 800, tavuk: 120, kuzu: 600, sut: 40, peynir: 350, 
+                    zeytin: 300, kira_ist: 25000, ev_ist: 4500000, 
+                    iphone: 65000, bigmac: 180, btc: 2200000, nst: 55
+                }
+            },
+             "2026": { // 2026 Current Time (Jan 9)
+                note: "Güncel (Ocak 2026)",
+                salaries: { asgari: 28075, emekli: 18500, memur: 49000, doktor: 92000, polis: 62000 }, 
+                items: {
+                    ceyrek: 5800, gram: 3450, dolar: 45, euro: 47, benzin: 51, ekmek: 15, 
+                    bira: 110, doner: 400, elektrik: 1300, tavuk: 180, kuzu: 900, sut: 60, peynir: 500, 
+                    zeytin: 450, kira_ist: 32000, ev_ist: 6000000, 
+                    iphone: 89000, bigmac: 240, btc: 3887000, nst: 112 
+                }
+            }
+        };
+
+        const itemLabels = {
+            ceyrek: { label: "Çeyrek Altın", unit: "Adet", icon: "fa-coins", source: "Altınkaynak" },
+            gram: { label: "Gram Altın", unit: "Gr", icon: "fa-ring", source: "BIST" },
+            dolar: { label: "Dolar (USD)", unit: "Adet ($)", icon: "fa-dollar-sign", source: "TCMB" },
+            euro: { label: "Euro", unit: "Adet (€)", icon: "fa-euro-sign", source: "TCMB" },
+            btc: { label: "Bitcoin (BTC)", unit: "BTC", icon: "fa-brands fa-bitcoin", source: "CoinMarketCap" },
+            nst: { label: "Ninja Squad (NST)", unit: "Adet", icon: "fa-solid fa-user-ninja", source: "CoinMarketCap" },
+            iphone: { label: "iPhone (Baz)", unit: "Adet", icon: "fa-mobile-screen", source: "Apple" },
+            ekmek: { label: "Ekmek", unit: "Adet", icon: "fa-bread-slice", source: "Fırıncılar O." },
+            benzin: { label: "Benzin", unit: "Lt", icon: "fa-gas-pump", source: "Petrol Ofisi" },
+            kira_ist: { label: "Kira (İst)", unit: "Ay", icon: "fa-house-chimney", source: "Emlak Endeksi" },
+            bira: { label: "Bira (50cl)", unit: "Adet", icon: "fa-beer-mug-empty", source: "Market Arşivi" },
+            doner: { label: "Döner Porsiyon", unit: "Pors.", icon: "fa-utensils", source: "Lokantalar O." },
+            elektrik: { label: "Elektrik", unit: "Fat.", icon: "fa-bolt", source: "EPDK" },
+            tavuk: { label: "1kg Tavuk", unit: "Kg", icon: "fa-drumstick-bite", source: "TÜİK" },
+            kuzu: { label: "1kg Kuzu Eti", unit: "Kg", icon: "fa-cow", source: "Et Süt K." },
+            sut: { label: "1kg Süt", unit: "Lt", icon: "fa-bottle-water", source: "USK" },
+            peynir: { label: "1kg Peynir", unit: "Kg", icon: "fa-cheese", source: "TÜİK" },
+            zeytin: { label: "1kg Zeytin", unit: "Kg", icon: "fa-bowl-rice", source: "TÜİK" },
+            ev_ist: { label: "Ev (İst)", unit: "Adet", icon: "fa-building", source: "GYODER" },
+            bigmac: { label: "Big Mac", unit: "Adet", icon: "fa-burger", source: "Economist" }
+        };
+
+        // --- INIT ---
+        function initFilters() {
+            const container = document.getElementById('itemFilters');
+            Object.keys(itemLabels).forEach(key => {
+                const isDefault = ['ceyrek', 'ekmek', 'benzin'].includes(key);
+                const wrapper = document.createElement('label');
+                wrapper.className = "cursor-pointer group relative";
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.className = "item-checkbox absolute opacity-0 w-0 h-0";
+                checkbox.dataset.key = key;
+                checkbox.checked = isDefault;
+
+                const display = document.createElement('div');
+                display.className = "border border-slate-200 bg-white text-slate-600 px-3 py-2 rounded-lg text-sm font-medium transition-all group-hover:border-orange-300 select-none shadow-sm flex items-center gap-2";
+                display.innerHTML = `<i class="${itemLabels[key].icon} text-slate-400"></i> ${itemLabels[key].label}`;
+
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(display);
+                container.appendChild(wrapper);
+            });
+        }
+
+        // --- CALCULATION ---
+        let charts = [];
+        let currentShareText = ""; 
+
+        function calculateData() {
+            const selectedYear = document.getElementById('yearSelect').value;
+            const salaryType = document.getElementById('salarySelect').value;
+            const currentYear = "2026"; 
+
+            const salaryPast = historicalData[selectedYear].salaries[salaryType];
+            const salaryNow = historicalData[currentYear].salaries[salaryType];
+
+            const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+            const selectedItems = Array.from(checkboxes).map(el => el.dataset.key);
+
+            if (selectedItems.length === 0) {
+                alert("Lütfen en az bir ürün seçiniz.");
+                return;
+            }
+
+            document.getElementById('placeholderState').classList.add('hidden');
+            document.getElementById('resultsArea').classList.remove('hidden');
+
+            const chartsContainer = document.getElementById('chartsContainer');
+            chartsContainer.innerHTML = ''; 
+            charts.forEach(c => c.destroy());
+            charts = [];
+            
+            currentShareText = `Finansal Hafıza (${selectedYear} vs 2026):\n`;
+
+            selectedItems.forEach((key, index) => {
+                const pricePast = historicalData[selectedYear].items[key];
+                const priceNow = historicalData[currentYear].items[key];
+                
+                // --- MISSING DATA LOGIC ---
+                // If price is 0 or undefined, show "Data Not Found" card
+                if (!pricePast || pricePast === 0) {
+                     const errorHtml = `
+                     <div class="bg-slate-100 rounded-2xl p-6 border border-slate-200 border-dashed flex flex-col items-center justify-center text-center h-64">
+                        <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                            <i class="${itemLabels[key].icon} text-3xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-700 text-lg mb-1">${itemLabels[key].label}</h3>
+                        <p class="text-slate-500 text-sm max-w-xs">
+                            <span class="font-bold text-orange-600">${selectedYear}</span> yılında bu ürün piyasada bulunmuyordu veya güvenilir veri kaynağı yok.
+                        </p>
+                     </div>
+                     `;
+                     chartsContainer.innerHTML += errorHtml;
+                     return; // Skip chart creation
+                }
+
+                const countPast = (salaryPast / pricePast).toFixed(2);
+                const countNow = (salaryNow / priceNow).toFixed(2);
+
+                currentShareText += `${itemLabels[key].label}: ${countPast} -> ${countNow}\n`;
+
+                const wrapperId = `chart-wrapper-${index}`;
+                const canvasId = `canvas-${index}`;
+
+                const salaryDisplayPast = formatMoney(salaryPast, selectedYear);
+                const salaryDisplayNow = formatMoney(salaryNow, currentYear);
+                const priceDisplayPast = formatMoney(pricePast, selectedYear);
+                const priceDisplayNow = formatMoney(priceNow, currentYear);
+
+                const html = `
+                <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-2xl relative overflow-hidden group" id="${wrapperId}">
+                     <div class="absolute right-0 top-0 h-full w-2/3 bg-gradient-to-l from-slate-800 to-transparent opacity-50 group-hover:opacity-60 transition-opacity"></div>
+                     <div class="absolute -right-10 -bottom-10 text-9xl text-white opacity-5"><i class="${itemLabels[key].icon}"></i></div>
+
+                     <div class="flex flex-col md:flex-row gap-8 relative z-10">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-900/50"><i class="${itemLabels[key].icon} text-lg"></i></div>
+                                <div>
+                                    <h3 class="font-black text-xl tracking-tight">${itemLabels[key].label}</h3>
+                                    <div class="text-xs text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded inline-block mt-1">Kaynak: ${itemLabels[key].source}</div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 backdrop-blur-sm">
+                                    <div class="text-orange-400 text-xs font-bold uppercase tracking-wider mb-2">${selectedYear} Verileri</div>
+                                    <div class="space-y-1">
+                                        <div class="text-sm text-slate-300 flex justify-between"><span>Maaş:</span> <span class="font-mono text-white">${salaryDisplayPast}</span></div>
+                                        <div class="text-sm text-slate-300 flex justify-between"><span>Fiyat:</span> <span class="font-mono text-white">${priceDisplayPast}</span></div>
+                                    </div>
+                                    <div class="mt-3 pt-3 border-t border-slate-700">
+                                        <div class="text-3xl font-black text-orange-500">${countPast} <span class="text-sm font-medium text-slate-400">${itemLabels[key].unit}</span></div>
+                                        <div class="text-[10px] text-slate-500">Alım Gücü</div>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 backdrop-blur-sm">
+                                    <div class="text-white text-xs font-bold uppercase tracking-wider mb-2">${currentYear} Verileri</div>
+                                    <div class="space-y-1">
+                                        <div class="text-sm text-slate-300 flex justify-between"><span>Maaş:</span> <span class="font-mono text-white">${salaryDisplayNow}</span></div>
+                                        <div class="text-sm text-slate-300 flex justify-between"><span>Fiyat:</span> <span class="font-mono text-white">${priceDisplayNow}</span></div>
+                                    </div>
+                                    <div class="mt-3 pt-3 border-t border-slate-700">
+                                        <div class="text-3xl font-black text-white">${countNow} <span class="text-sm font-medium text-slate-400">${itemLabels[key].unit}</span></div>
+                                        <div class="text-[10px] text-slate-500">Alım Gücü</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-h-[240px] flex items-center justify-center bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                     </div>
+                </div>`;
+                
+                chartsContainer.innerHTML += html;
+            });
+
+            // Init Charts (Delayed to ensure DOM is ready)
+            setTimeout(() => {
+                selectedItems.forEach((key, index) => {
+                    const pricePast = historicalData[selectedYear].items[key];
+                    if (!pricePast || pricePast === 0) return; // Skip logic for missing data
+
+                    const canvasId = `canvas-${index}`;
+                    const priceNow = historicalData[currentYear].items[key];
+                    const countPast = (salaryPast / pricePast).toFixed(2);
+                    const countNow = (salaryNow / priceNow).toFixed(2);
+                    
+                    createChart(canvasId, selectedYear, currentYear, countPast, countNow, itemLabels[key].label);
+                });
+            }, 50);
+
+            // GRID CARDS
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+            
+            selectedItems.forEach(key => {
+                const pPast = historicalData[selectedYear].items[key];
+                if (!pPast || pPast === 0) return;
+
+                const pNow = historicalData[currentYear].items[key];
+                const cPast = (salaryPast / pPast).toFixed(1);
+                const cNow = (salaryNow / pNow).toFixed(1);
+                const diff = cNow - cPast;
+                const isPositive = diff >= 0;
+
+                const cardHtml = `
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-3">
+                             <div class="font-bold text-sm text-slate-700 flex items-center gap-2">
+                                <i class="${itemLabels[key].icon} text-slate-400"></i> ${itemLabels[key].label}
+                             </div>
+                             <div class="text-xs ${isPositive ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'} px-2 py-1 rounded-md font-bold">
+                                ${isPositive ? '+' : ''}${diff.toFixed(1)}
+                             </div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
+                            <div><span class="block text-[10px] uppercase text-slate-400">${selectedYear}</span><span class="font-bold text-slate-800 text-sm">${cPast}</span></div>
+                            <div class="text-right"><span class="block text-[10px] uppercase text-slate-400">2026</span><span class="font-bold text-slate-800 text-sm">${cNow}</span></div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHtml;
+            });
+            
+            document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- CHART GENERATOR ---
+        function createChart(canvasId, yearPast, yearNow, valPast, valNow, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [yearPast, yearNow],
+                    datasets: [{
+                        label: `Alım Gücü`,
+                        data: [valPast, valNow],
+                        backgroundColor: ['#f97316', '#e2e8f0'],
+                        borderRadius: 6,
+                        barThickness: 32,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', 
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { 
+                            backgroundColor: '#0f172a',
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: { label: (c) => c.raw + ' Adet/Birim' }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { display: false }, ticks: { color: '#f8fafc', font: {weight:'600'} } }
+                    }
+                }
+            });
+        }
+
+        // --- HELPERS ---
+        function formatMoney(amount, year) {
+            if (parseInt(year) < 2005) {
+                const oldAmount = amount * 1000000;
+                return new Intl.NumberFormat('tr-TR').format(oldAmount) + " TL";
+            }
+            return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 2 }).format(amount) + " TL";
+        }
+
+        function shareResult(platform) {
+            const text = encodeURIComponent(currentShareText + "\nhttps://finansalhafiza.app");
+            const urls = {
+                twitter: `https://twitter.com/intent/tweet?text=${text}`,
+                whatsapp: `https://wa.me/?text=${text}`,
+                linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=https://finansalhafiza.app`
+            };
+            window.open(urls[platform], '_blank');
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        window.onload = function() {
+            initFilters();
+            ['premiumModal', 'errorModal'].forEach(id => {
+                document.getElementById(id).addEventListener('click', function(e) {
+                    if(e.target === this) closeModal(id);
+                });
+            });
+        };
+    </script>
+</body>
+</html>
