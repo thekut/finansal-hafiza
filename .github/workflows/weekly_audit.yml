@@ -27,13 +27,13 @@ jobs:
           pip install requests
 
       - name: Run Audit Script
-        run: python scripts/audit_economy.py
+        run: python audit_economy.py
 
       - name: Send Email Notification
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: python scripts/email_notifier.py
+        run: python email_notifier.py
 
       - name: Auto-Commit Changes (If any)
         run: |
