@@ -2,12 +2,11 @@ name: Weekly Economy Audit
 
 on:
   schedule:
-    # Her Pazartesi sabah 09:00'da çalışır
     - cron: '0 9 * * 1'
-  workflow_dispatch: # Manuel çalıştırma butonu ekler
+  workflow_dispatch:
 
 permissions:
-  contents: write # Siteyi güncellemek için izin
+  contents: write
 
 jobs:
   audit_and_update:
@@ -26,18 +25,34 @@ jobs:
         run: |
           pip install requests
 
+      # GÜNCELLENDİ: Dosya scripts klasöründe de olsa, ana dizinde de olsa bulup çalıştırır.
       - name: Run Audit Script
-        run: python audit_economy.py
+        run: |
+          if [ -f "scripts/audit_economy.py" ]; then
+            python scripts/audit_economy.py
+          elif [ -f "audit_economy.py" ]; then
+            python audit_economy.py
+          else
+            echo "HATA: audit_economy.py dosyasi bulunamadi!"
+            exit 1
+          fi
 
       - name: Send Email Notification
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: python email_notifier.py
+        run: |
+          if [ -f "scripts/email_notifier.py" ]; then
+            python scripts/email_notifier.py
+          elif [ -f "email_notifier.py" ]; then
+            python email_notifier.py
+          else
+            echo "Uyari: email_notifier.py bulunamadi, e-posta atlanıyor."
+          fi
 
       - name: Auto-Commit Changes (If any)
         run: |
           git config --global user.name 'FinansBot'
           git config --global user.email 'bot@finansalhafiza.app'
           git add index.html
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Otomatik Guncelleme: Veriler yenilendi" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update: Economic data refreshed" && git push)
