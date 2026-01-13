@@ -2,11 +2,12 @@ name: Weekly Economy Audit
 
 on:
   schedule:
+    # Her Pazartesi saat 09:00'da çalışır (UTC)
     - cron: '0 9 * * 1'
-  workflow_dispatch:
+  workflow_dispatch: # Manuel tetiklemeye izin ver
 
 permissions:
-  contents: write
+  contents: write # Siteyi güncellemek için gerekli izin
 
 jobs:
   audit_and_update:
@@ -25,15 +26,20 @@ jobs:
         run: |
           pip install requests
 
-      # GÜNCELLENDİ: Dosya scripts klasöründe de olsa, ana dizinde de olsa bulup çalıştırır.
+      # GÜNCELLENDİ: Dosya nerede olursa olsun (scripts içinde veya ana dizinde) bulup çalıştırır.
       - name: Run Audit Script
         run: |
+          echo "Dosya konumu kontrol ediliyor..."
           if [ -f "scripts/audit_economy.py" ]; then
+            echo "Dosya 'scripts' klasorunde bulundu."
             python scripts/audit_economy.py
           elif [ -f "audit_economy.py" ]; then
+            echo "Dosya ana dizinde bulundu."
             python audit_economy.py
           else
-            echo "HATA: audit_economy.py dosyasi bulunamadi!"
+            echo "HATA: audit_economy.py dosyasi hicbir yerde bulunamadi!"
+            echo "Mevcut dosyalar şunlar:"
+            ls -R
             exit 1
           fi
 
@@ -55,4 +61,5 @@ jobs:
           git config --global user.name 'FinansBot'
           git config --global user.email 'bot@finansalhafiza.app'
           git add index.html
+          # Değişiklik varsa kaydet ve gönder
           git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update: Economic data refreshed" && git push)
