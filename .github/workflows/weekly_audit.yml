@@ -2,8 +2,8 @@ name: Weekly Economy Audit
 
 on:
   schedule:
-    # Her Pazartesi saat 09:00'da çalışır (UTC)
-    - cron: '0 9 * * 1'
+    # Her saat başı çalışır (UTC)
+    - cron: '0 * * * *'
   workflow_dispatch: # Manuel tetiklemeye izin ver
 
 permissions:
@@ -26,13 +26,13 @@ jobs:
         run: |
           pip install requests
 
-      # GÜNCELLENDİ: Dosya nerede olursa olsun (scripts içinde veya ana dizinde) bulup çalıştırır.
+      # GÜNCELLENDİ: Dosya nerede olursa olsun (script içinde veya ana dizinde) bulup çalıştırır.
       - name: Run Audit Script
         run: |
           echo "Dosya konumu kontrol ediliyor..."
-          if [ -f "scripts/audit_economy.py" ]; then
-            echo "Dosya 'scripts' klasorunde bulundu."
-            python scripts/audit_economy.py
+          if [ -f "script/audit_economy.py" ]; then
+            echo "Dosya 'script' klasorunde bulundu."
+            python script/audit_economy.py
           elif [ -f "audit_economy.py" ]; then
             echo "Dosya ana dizinde bulundu."
             python audit_economy.py
@@ -48,8 +48,8 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
         run: |
-          if [ -f "scripts/email_notifier.py" ]; then
-            python scripts/email_notifier.py
+          if [ -f "script/email_notifier.py" ]; then
+            python script/email_notifier.py
           elif [ -f "email_notifier.py" ]; then
             python email_notifier.py
           else
