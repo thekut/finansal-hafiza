@@ -5,8 +5,8 @@ import re
 from datetime import datetime
 
 # Configuration
-URL_GOLD = "https://api.altin.in/tum/altin" # Placeholder for gold API or scraping
-URL_USD = "https://api.exchangerate-api.com/v4/latest/USD" # Placeholder
+URL_GOLD = "https://finans.truncgil.com/today.json" # Free public API for gold data
+URL_USD = "https://api.exchangerate-api.com/v4/latest/USD" # Free public API for exchange rates
 INDEX_FILE = "index.html"
 
 def fetch_data():
