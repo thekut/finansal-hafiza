@@ -26,20 +26,17 @@ jobs:
         run: |
           pip install requests
 
-      # GÜNCELLENDİ: Dosya nerede olursa olsun (script içinde veya ana dizinde) bulup çalıştırır.
+      - name: Debug File System
+        run: |
+          ls -R
+
       - name: Run Audit Script
         run: |
-          echo "Dosya konumu kontrol ediliyor..."
+          # Script dosyasının varlığını kontrol et ve çalıştır
           if [ -f "script/audit_economy.py" ]; then
-            echo "Dosya 'script' klasorunde bulundu."
             python script/audit_economy.py
-          elif [ -f "audit_economy.py" ]; then
-            echo "Dosya ana dizinde bulundu."
-            python audit_economy.py
           else
-            echo "HATA: audit_economy.py dosyasi hicbir yerde bulunamadi!"
-            echo "Mevcut dosyalar şunlar:"
-            ls -R
+            echo "::error::script/audit_economy.py bulunamadı!"
             exit 1
           fi
 
@@ -47,13 +44,12 @@ jobs:
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        continue-on-error: true
         run: |
           if [ -f "script/email_notifier.py" ]; then
             python script/email_notifier.py
-          elif [ -f "email_notifier.py" ]; then
-            python email_notifier.py
           else
-            echo "Uyari: email_notifier.py bulunamadi, e-posta atlanıyor."
+            echo "email_notifier.py bulunamadı, atlanıyor."
           fi
 
       - name: Auto-Commit Changes (If any)
@@ -62,4 +58,9 @@ jobs:
           git config --global user.email 'bot@finansalhafiza.app'
           git add index.html
           # Değişiklik varsa kaydet ve gönder
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update: Economic data refreshed" && git push)
+          if git diff --staged --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Auto-update: Economic data refreshed"
+            git push
+          fi
