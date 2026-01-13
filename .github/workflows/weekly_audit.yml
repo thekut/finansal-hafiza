@@ -2,8 +2,8 @@ name: Weekly Economy Audit
 
 on:
   schedule:
-    # Her Pazartesi saat 09:00'da çalışır (UTC)
-    - cron: '0 9 * * 1'
+    # Her saat başı çalışır (UTC)
+    - cron: '0 * * * *'
   workflow_dispatch: # Manuel tetiklemeye izin ver
 
 permissions:
