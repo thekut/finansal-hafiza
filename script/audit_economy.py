@@ -1,12 +1,13 @@
 import requests
 import re
 import os
+import sys
 
 def fetch_data():
     data = {}
     try:
         # Fetch USD and EUR
-        r = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
+        r = requests.get("https://api.exchangerate-api.com/v4/latest/USD", timeout=10)
         if r.status_code == 200:
             rates = r.json().get('rates', {})
             usd_try = rates.get('TRY', 0)
@@ -23,9 +24,17 @@ def fetch_data():
 
             data['gram'] = int(gram_gold_try)
             data['ceyrek'] = int(gram_gold_try * 1.605 * 1.05) # 1.605g + 5% margin
+        else:
+            print(f"Error: API returned status code {r.status_code}")
+            sys.exit(1)
 
     except Exception as e:
         print(f"Error fetching data: {e}")
+        sys.exit(1)
+
+    if not data:
+        print("Error: Failed to populate data.")
+        sys.exit(1)
 
     return data
 
@@ -36,7 +45,7 @@ def update_index(data):
             content = f.read()
     except FileNotFoundError:
         print(f"{filepath} not found.")
-        return
+        sys.exit(1)
 
     # Locate 2026 items block
     # We look for "2026": { ... items: { ... } }
@@ -51,7 +60,7 @@ def update_index(data):
 
         if end_idx == -1:
             print("Could not find end of items block.")
-            return
+            sys.exit(1)
 
         items_block = content[start_idx:end_idx]
 
@@ -73,6 +82,7 @@ def update_index(data):
 
     else:
         print("Could not find 2026 items block.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     data = fetch_data()

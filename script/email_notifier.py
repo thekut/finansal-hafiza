@@ -13,7 +13,11 @@ EMAIL_RECIPIENT = "gururlu_kimya7o@icloud.com" # Buraya kendi mail adresinizi ya
 
 def send_weekly_report(report_body):
     if not EMAIL_SENDER or not EMAIL_PASSWORD:
-        print("E-posta gönderimi atlandı: Kimlik bilgileri (Secrets) bulunamadı.")
+        print("⚠️  UYARI: E-posta gönderilemedi.")
+        print("Gerekli kimlik bilgileri (Environment Variables) eksik.")
+        print("Lütfen GitHub Repository -> Settings -> Secrets and variables -> Actions kısmına giderek şu Secret'ları ekleyin:")
+        print(" - EMAIL_USER: Gönderici Gmail adresi")
+        print(" - EMAIL_PASS: Gmail Uygulama Şifresi (App Password)")
         return
 
     msg = MIMEMultipart()
@@ -43,9 +47,9 @@ def send_weekly_report(report_body):
         text = msg.as_string()
         server.sendmail(EMAIL_SENDER, EMAIL_RECIPIENT, text)
         server.quit()
-        print("Haftalık rapor e-postası başarıyla gönderildi.")
+        print("✅ Haftalık rapor e-postası başarıyla gönderildi.")
     except Exception as e:
-        print(f"E-posta gönderilemedi: {e}")
+        print(f"❌ E-posta gönderilemedi: {e}")
 
 if __name__ == "__main__":
     # Test çalışması
