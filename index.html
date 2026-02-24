@@ -51,8 +51,8 @@
             padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
             transition: all 0.2s; color: white;
         }
-        .share-twitter { background-color: #1DA1F2; }
-        .share-twitter:hover { background-color: #0c85d0; }
+        .share-twitter { background-color: #000000; }
+        .share-twitter:hover { background-color: #333333; }
         .share-whatsapp { background-color: #25D366; }
         .share-whatsapp:hover { background-color: #1ebc57; }
         .share-linkedin { background-color: #0A66C2; }
@@ -81,42 +81,28 @@
             
             <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
                 <a href="#analiz" class="hover:text-orange-600 transition-colors py-2">Analizler</a>
-                <a href="#gundem" class="hover:text-orange-600 transition-colors py-2">Gündem & Haberler</a>
-                <button onclick="openModal('premiumModal')" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-900 px-5 py-2 rounded-full transition-colors border border-transparent hover:border-slate-300">
-                    <i class="fa-solid fa-crown text-orange-500"></i>
-                    <span>Premium</span>
-                </button>
+                <!-- Gündem & Haberler Removed -->
+                <!-- Premium Button Removed -->
             </div>
             
             <button class="md:hidden text-slate-600 text-xl"><i class="fa-solid fa-bars"></i></button>
         </div>
     </header>
 
-    <!-- Breaking News Bar -->
-    <div class="bg-slate-900 text-white text-xs py-2 overflow-hidden relative">
-        <div class="max-w-7xl mx-auto px-4 flex items-center">
-            <span class="bg-red-600 text-white px-2 py-0.5 rounded font-bold mr-4 shrink-0 animate-pulse">SON DAKİKA</span>
-            <div class="overflow-hidden w-full">
-                <div class="news-ticker-content">
-                    <span class="mr-8">📢 2026 Asgari Ücret Net 28.075 TL Olarak Belirlendi!</span>
-                    <span class="mr-8">📉 Muhalefet Lideri Özel: "39 Bin TL Altı Sefalet Ücretidir"</span>
-                    <span class="mr-8">🪙 Bitcoin (BTC) 3.8 Milyon TL Sınırını Zorluyor</span>
-                    <span class="mr-8">🚀 Ninja Squad Token (NST) 112 TL Seviyesini Gördü</span>
-                    <span class="mr-8">🏠 İstanbul'da Ortalama Kira 32.000 TL'ye Ulaştı</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Breaking News Bar Removed -->
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow">
 
         <!-- Intro -->
         <div class="mb-10 text-center md:text-left">
             <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Ekonomik Hafıza & Gündem</h2>
-            <p class="text-slate-500 text-lg max-w-2xl">Geçmişten bugüne alım gücü analizi ve güncel ekonomik veriler. <span class="text-orange-600 font-medium">(2026 Verileri Eklendi)</span></p>
+            <p class="text-slate-500 text-lg max-w-2xl">Geçmişten bugüne alım gücü analizi ve güncel ekonomik veriler.</p>
         </div>
 
         <!-- Control Panel -->
+        <!-- AD SPACE: TOP BANNER -->
+        <!-- <div class="w-full h-32 bg-slate-100 flex items-center justify-center mb-8 rounded-xl border border-slate-200 text-slate-400 font-bold">REKLAM ALANI (970x90)</div> -->
+
         <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 mb-10 relative overflow-hidden" id="analiz">
             <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-slate-200 via-orange-500 to-slate-200"></div>
 
@@ -180,13 +166,16 @@
         <!-- Results Section -->
         <div id="resultsArea" class="hidden animate-fade-in space-y-10">
             
+            <!-- AD SPACE: MID CONTENT -->
+            <!-- <div class="w-full h-32 bg-slate-100 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 font-bold">REKLAM ALANI (Responsive)</div> -->
+
             <!-- Share Section -->
             <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                 <div class="text-sm font-bold text-slate-500 uppercase tracking-wider">
                     <i class="fa-solid fa-share-nodes mr-2"></i> Analizi Paylaş
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="shareResult('twitter')" class="share-btn share-twitter">Twitter</button>
+                    <button onclick="shareResult('twitter')" class="share-btn share-twitter"><i class="fa-brands fa-x-twitter"></i></button>
                     <button onclick="shareResult('whatsapp')" class="share-btn share-whatsapp">WhatsApp</button>
                     <button onclick="shareResult('linkedin')" class="share-btn share-linkedin">LinkedIn</button>
                 </div>
@@ -202,94 +191,35 @@
                 <!-- Small Cards injected here -->
             </div>
 
-            <!-- News & Archive Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" id="gundem">
-                
-                <!-- Main News Feed -->
-                <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="bg-slate-50 border-b border-slate-200 p-4 flex justify-between items-center">
-                        <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                            Güncel Ekonomi Gündemi (Ocak 2026)
-                        </h3>
-                        <span class="text-xs text-slate-400">Canlı Veri (Simüle)</span>
-                    </div>
-                    
-                    <div class="divide-y divide-slate-100">
-                        <!-- News Item 1 -->
-                        <div class="p-5 hover:bg-slate-50 transition-colors group cursor-pointer">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Asgari Ücret</span>
-                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 2 Saat Önce</span>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-lg group-hover:text-blue-600 transition-colors mb-2">2026 Asgari Ücret Net 28.075 TL Olarak Resmi Gazete'de</h4>
-                            <p class="text-sm text-slate-600 mb-3">Çalışma ve Sosyal Güvenlik Bakanlığı, 2026 yılı için geçerli olacak net asgari ücreti açıkladı. İşveren maliyeti 40 bin TL'yi aştı.</p>
-                            <div class="flex items-center gap-3 text-xs text-slate-500">
-                                <span><i class="fa-solid fa-chart-line mr-1"></i> %27 Artış</span>
-                                <span><i class="fa-solid fa-newspaper mr-1"></i> Kaynak: Resmi Gazete</span>
-                            </div>
-                        </div>
+            <!-- Archive Links & Feedback (Moved outside of removed gundem grid, but kept for utility if needed, or I can remove the whole bottom section.
+                 The user asked to remove "Gündem & Haberler". The Archive section was part of that grid.
+                 I'll remove the whole 'gundem' grid as it contained news and archive.
+                 But the "Archive" part might be useful. The user specifically said "en üstte bulunan son dakika bilgileri... ve en altta güncel ekonomi gündemi".
+                 The Archive links are useful resources. I will keep them but move them out of the 3-column grid structure which is now broken since I removed the news column.
+                 Actually, simpler to remove the news column and keep the archive column, or just remove the whole section as "Gündem & Haberler" is removed from menu.
+                 The user said "Gündem & Haberler bölümünü kaldır". This likely implies the whole section.
+                 I will remove the whole 'gundem' div.
+            -->
 
-                        <!-- News Item 2 -->
-                        <div class="p-5 hover:bg-slate-50 transition-colors group cursor-pointer">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Siyaset & Ekonomi</span>
-                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 4 Saat Önce</span>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-lg group-hover:text-red-600 transition-colors mb-2">Muhalefetten Sert Tepki: "Açlık Sınırı 30 Bin TL İken Bu Rakam Kabul Edilemez"</h4>
-                            <p class="text-sm text-slate-600 mb-3">CHP Genel Başkanı Özgür Özel ve DEM Parti Eş Başkanları, yeni asgari ücretin 'sefalet ücreti' olduğunu belirterek 39 bin TL talebini yineledi.</p>
-                            <div class="flex items-center gap-3 text-xs text-slate-500">
-                                <span><i class="fa-solid fa-quote-left mr-1"></i> Sefalet Ücreti</span>
-                                <span><i class="fa-solid fa-newspaper mr-1"></i> Kaynak: Halk TV / Sözcü</span>
-                            </div>
-                        </div>
-
-                        <!-- News Item 3 -->
-                        <div class="p-5 hover:bg-slate-50 transition-colors group cursor-pointer">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Kripto & Teknoloji</span>
-                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 30 Dakika Önce</span>
-                            </div>
-                            <h4 class="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors mb-2">Ninja Squad Token (NST) Rekor Tazeledi: 112 TL'yi Aştı</h4>
-                            <p class="text-sm text-slate-600 mb-3">Türk kripto projesi NST, küresel borsalardaki hacim artışıyla birlikte TL bazında tüm zamanların en yüksek seviyesine yaklaştı.</p>
-                            <div class="flex items-center gap-3 text-xs text-slate-500">
-                                <span><i class="fa-solid fa-arrow-trend-up mr-1"></i> +%4.2</span>
-                                <span><i class="fa-solid fa-newspaper mr-1"></i> Kaynak: CoinMarketCap</span>
-                            </div>
-                        </div>
+            <!-- Error Reporting Section (Kept standalone or moved) -->
+             <div class="max-w-2xl mx-auto mt-12">
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 text-center">
+                    <div class="font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Veri Hatası mı?
                     </div>
-                </div>
-
-                <!-- Archive Links & Feedback -->
-                <div class="space-y-6">
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-link text-orange-600"></i> Kaynak Arşivi
-                        </h3>
-                        <ul class="space-y-3 text-sm">
-                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-building-columns w-4"></i> TCMB Enflasyon Hesaplayıcı</a></li>
-                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-chart-pie w-4"></i> TÜİK Madde Sepeti Arşivi</a></li>
-                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-gas-pump w-4"></i> Petrol Ofisi Fiyat Tarihçesi</a></li>
-                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-brands fa-bitcoin w-4"></i> CoinMarketCap Historical Data</a></li>
-                            <li><a href="#" class="flex items-center gap-2 text-slate-600 hover:text-orange-600 transition-colors"><i class="fa-solid fa-gavel w-4"></i> CSGB Asgari Ücret İstatistikleri</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                        <div class="font-bold text-slate-800 mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Veri Hatası mı?
-                        </div>
-                        <p class="text-sm text-slate-500 mb-4">Tarihsel verilerde bir yanlışlık fark ettiyseniz lütfen bize bildirin.</p>
-                        <button onclick="openModal('errorModal')" class="w-full bg-white border border-red-200 text-red-600 font-bold py-3 rounded-lg text-sm hover:bg-red-50 transition-colors shadow-sm">
-                            Hata Bildir
-                        </button>
-                    </div>
+                    <p class="text-sm text-slate-500 mb-4">Tarihsel verilerde bir yanlışlık fark ettiyseniz lütfen bize bildirin.</p>
+                    <button onclick="openModal('errorModal')" class="bg-white border border-red-200 text-red-600 font-bold py-2 px-6 rounded-lg text-sm hover:bg-red-50 transition-colors shadow-sm">
+                        Hata Bildir
+                    </button>
                 </div>
             </div>
 
         </div>
 
     </main>
+
+    <!-- AD SPACE: FOOTER BANNER -->
+    <!-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8"><div class="w-full h-32 bg-slate-100 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 font-bold">REKLAM ALANI (Responsive)</div></div> -->
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-8 mt-12">
@@ -303,23 +233,7 @@
         </div>
     </footer>
 
-    <!-- Premium Modal -->
-    <div id="premiumModal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl transform scale-100 transition-all">
-            <button onclick="closeModal('premiumModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <div class="text-center">
-                <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-5 rotate-3">
-                    <i class="fa-solid fa-file-invoice-dollar text-3xl text-orange-600"></i>
-                </div>
-                <h3 class="text-2xl font-black text-slate-900 mb-2">Profesyonel Rapor</h3>
-                <p class="text-slate-500 mb-8 leading-relaxed">Seçtiğiniz döneme ait detaylı analizleri, kaynakçalı PDF sunum formatında ücretsiz indirin.</p>
-                <form onsubmit="event.preventDefault(); alert('Rapor e-posta adresinize gönderildi!'); closeModal('premiumModal');" class="space-y-4">
-                    <input type="email" placeholder="E-posta adresiniz" class="w-full border border-slate-300 bg-slate-50 p-4 rounded-xl text-sm outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all" required>
-                    <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-4 rounded-xl shadow-lg transition-colors">Raporu Gönder</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Premium Modal Removed -->
 
     <!-- Error Reporting Modal -->
     <div id="errorModal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center backdrop-blur-sm p-4">
@@ -491,7 +405,10 @@
             charts.forEach(c => c.destroy());
             charts = [];
             
-            currentShareText = `Finansal Hafıza (${selectedYear} vs 2026):\n`;
+            const salarySelect = document.getElementById('salarySelect');
+            const salaryText = salarySelect.options[salarySelect.selectedIndex].text;
+
+            currentShareText = `Finansal Hafıza (${selectedYear} vs 2026) - ${salaryText}:\n`;
 
             selectedItems.forEach((key, index) => {
                 const pricePast = historicalData[selectedYear].items[key];
@@ -576,6 +493,8 @@
                 
                 chartsContainer.innerHTML += html;
             });
+
+            currentShareText += "\nAlım gücüm eridi mi?";
 
             // Init Charts (Delayed to ensure DOM is ready)
             setTimeout(() => {
@@ -691,9 +610,12 @@
         window.onload = function() {
             initFilters();
             ['premiumModal', 'errorModal'].forEach(id => {
-                document.getElementById(id).addEventListener('click', function(e) {
-                    if(e.target === this) closeModal(id);
-                });
+                const modal = document.getElementById(id);
+                if (modal) {
+                    modal.addEventListener('click', function(e) {
+                        if(e.target === this) closeModal(id);
+                    });
+                }
             });
         };
     </script>
