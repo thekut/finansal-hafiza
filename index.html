@@ -36,10 +36,10 @@
         .dark ::-webkit-scrollbar-thumb { background: #334155; }
 
         .item-checkbox:checked + div {
-            background-color: #fff7ed; border-color: #f97316; color: #c2410c; font-weight: 600;
+            background-color: #f0fdf4; border-color: #22c55e; color: #15803d; font-weight: 600;
         }
         .dark .item-checkbox:checked + div {
-            background-color: #431407; border-color: #f97316; color: #fdba74;
+            background-color: #052e16; border-color: #22c55e; color: #86efac;
         }
         
         /* News Ticker Animation */
@@ -59,7 +59,7 @@
             padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
             transition: all 0.2s; color: white;
         }
-        .share-twitter { background-color: #000000; color: white !important; }
+        .share-twitter { background-color: #000000; color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
         .share-twitter:hover { background-color: #333333; }
         .share-facebook { background-color: #1877F2; }
         .share-facebook:hover { background-color: #166fe5; }
@@ -410,7 +410,7 @@
             const salaryText = salarySelect.options[salarySelect.selectedIndex].text;
 
             // Build Share Text
-            currentShareText = `Finansal Hafıza Raporu\n${salaryText}na göre ${selectedYear} yılında`;
+            currentShareText = `Finansal Hafıza Raporu\n${salaryText} verisine göre ${selectedYear} yılında`;
 
             selectedItems.forEach((key, index) => {
                 const pricePast = historicalData[selectedYear].items[key];
