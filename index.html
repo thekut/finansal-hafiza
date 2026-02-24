@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,22 +16,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Roboto', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Roboto', sans-serif; }
         
         select {
             -webkit-appearance: none; -moz-appearance: none; appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em;
         }
+        .dark select {
+             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
 
         .transition-smooth { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
 
         .item-checkbox:checked + div {
             background-color: #fff7ed; border-color: #f97316; color: #c2410c; font-weight: 600;
+        }
+        .dark .item-checkbox:checked + div {
+            background-color: #431407; border-color: #f97316; color: #fdba74;
         }
         
         /* News Ticker Animation */
@@ -51,8 +59,10 @@
             padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
             transition: all 0.2s; color: white;
         }
-        .share-twitter { background-color: #000000; }
+        .share-twitter { background-color: #000000; color: white !important; }
         .share-twitter:hover { background-color: #333333; }
+        .share-facebook { background-color: #1877F2; }
+        .share-facebook:hover { background-color: #166fe5; }
         .share-whatsapp { background-color: #25D366; }
         .share-whatsapp:hover { background-color: #1ebc57; }
         .share-linkedin { background-color: #0A66C2; }
@@ -67,25 +77,25 @@
         }
     </style>
 </head>
-<body class="text-slate-800 antialiased flex flex-col min-h-screen">
+<body class="text-slate-800 dark:text-slate-100 dark:bg-slate-900 antialiased flex flex-col min-h-screen transition-colors duration-300">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+    <header class="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <div class="bg-orange-600 text-white w-9 h-9 rounded-lg flex items-center justify-center font-bold shadow-sm">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">FİNANS<span class="text-orange-600">HAFIZA</span></h1>
+                <h1 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">FİNANS<span class="text-orange-600">HAFIZA</span></h1>
             </div>
             
-            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
-                <a href="#analiz" class="hover:text-orange-600 transition-colors py-2">Analizler</a>
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                <a href="#analiz" class="hover:text-orange-600 dark:hover:text-orange-500 transition-colors py-2">Analizler</a>
                 <!-- Gündem & Haberler Removed -->
                 <!-- Premium Button Removed -->
             </div>
             
-            <button class="md:hidden text-slate-600 text-xl"><i class="fa-solid fa-bars"></i></button>
+            <button class="md:hidden text-slate-600 dark:text-slate-400 text-xl"><i class="fa-solid fa-bars"></i></button>
         </div>
     </header>
 
@@ -95,24 +105,24 @@
 
         <!-- Intro -->
         <div class="mb-10 text-center md:text-left">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Ekonomik Hafıza & Gündem</h2>
-            <p class="text-slate-500 text-lg max-w-2xl">Geçmişten bugüne alım gücü analizi ve güncel ekonomik veriler.</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">Ekonomik Hafıza & Gündem</h2>
+            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl">Geçmişten bugüne alım gücü analizi ve güncel ekonomik veriler.</p>
         </div>
 
         <!-- Control Panel -->
         <!-- AD SPACE: TOP BANNER -->
-        <!-- <div class="w-full h-32 bg-slate-100 flex items-center justify-center mb-8 rounded-xl border border-slate-200 text-slate-400 font-bold">REKLAM ALANI (970x90)</div> -->
+        <!-- <div class="w-full h-32 bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-8 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 font-bold">REKLAM ALANI (970x90)</div> -->
 
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 md:p-8 mb-10 relative overflow-hidden" id="analiz">
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-slate-200 via-orange-500 to-slate-200"></div>
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-6 md:p-8 mb-10 relative overflow-hidden transition-colors duration-300" id="analiz">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-slate-200 dark:from-slate-700 via-orange-500 to-slate-200 dark:to-slate-700"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-10 gap-6 items-end">
                 
                 <!-- Date Selector -->
                 <div class="md:col-span-3 w-full space-y-2">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Hesaplama Yılı</label>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Hesaplama Yılı</label>
                     <div class="relative">
-                        <select id="yearSelect" class="w-full h-14 bg-slate-50 border border-slate-300 text-slate-900 text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
+                        <select id="yearSelect" class="w-full h-14 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
                             <option value="1998">1998 (6 Sıfır Öncesi)</option>
                             <option value="2002">2002 (Kriz Sonrası)</option>
                             <option value="2010">2010 (İstikrar Dönemi)</option>
@@ -125,9 +135,9 @@
 
                 <!-- Salary Segment Selector -->
                 <div class="md:col-span-4 w-full space-y-2">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Gelir Grubu / Baz Maaş</label>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Gelir Grubu / Baz Maaş</label>
                     <div class="relative">
-                        <select id="salarySelect" class="w-full h-14 bg-slate-50 border border-slate-300 text-slate-900 text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
+                        <select id="salarySelect" class="w-full h-14 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
                             <option value="asgari">Asgari Ücret (Net)</option>
                             <option value="emekli">En Düşük Emekli Maaşı</option>
                             <option value="memur">Ortalama Memur Maaşı</option>
@@ -146,7 +156,7 @@
             </div>
 
             <!-- Item Filters -->
-            <div class="mt-8 pt-6 border-t border-slate-100">
+            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700">
                 <label class="block text-xs font-bold text-slate-400 uppercase mb-4">Kıyaslanacak Veriler (Çoklu Seçim Yapabilirsiniz)</label>
                 <div class="flex flex-wrap gap-3" id="itemFilters">
                     <!-- Filters injected by JS -->
@@ -155,11 +165,11 @@
         </div>
 
         <!-- Placeholder -->
-        <div id="placeholderState" class="text-center py-24 bg-white rounded-2xl border-2 border-dashed border-slate-200">
-            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-                <i class="fa-solid fa-chart-pie text-3xl text-slate-300"></i>
+        <div id="placeholderState" class="text-center py-24 bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 transition-colors duration-300">
+            <div class="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <i class="fa-solid fa-chart-pie text-3xl text-slate-300 dark:text-slate-600"></i>
             </div>
-            <h3 class="text-xl font-bold text-slate-700">Analiz Başlatın</h3>
+            <h3 class="text-xl font-bold text-slate-700 dark:text-white">Analiz Başlatın</h3>
             <p class="text-slate-400 mt-2">Lütfen yukarıdan bir yıl ve maaş grubu seçerek hesaplamayı başlatın.</p>
         </div>
 
@@ -167,15 +177,16 @@
         <div id="resultsArea" class="hidden animate-fade-in space-y-10">
             
             <!-- AD SPACE: MID CONTENT -->
-            <!-- <div class="w-full h-32 bg-slate-100 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 font-bold">REKLAM ALANI (Responsive)</div> -->
+            <!-- <div class="w-full h-32 bg-slate-100 dark:bg-slate-800 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 font-bold">REKLAM ALANI (Responsive)</div> -->
 
             <!-- Share Section -->
-            <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <div class="text-sm font-bold text-slate-500 uppercase tracking-wider">
+            <div class="flex flex-wrap justify-between items-center gap-4 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm transition-colors duration-300">
+                <div class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     <i class="fa-solid fa-share-nodes mr-2"></i> Analizi Paylaş
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="shareResult('twitter')" class="share-btn share-twitter"><i class="fa-brands fa-x-twitter"></i></button>
+                    <button onclick="shareResult('twitter')" class="share-btn share-twitter text-white"><i class="fa-brands fa-x-twitter"></i></button>
+                    <button onclick="shareResult('facebook')" class="share-btn share-facebook">Facebook</button>
                     <button onclick="shareResult('whatsapp')" class="share-btn share-whatsapp">WhatsApp</button>
                     <button onclick="shareResult('linkedin')" class="share-btn share-linkedin">LinkedIn</button>
                 </div>
@@ -191,24 +202,14 @@
                 <!-- Small Cards injected here -->
             </div>
 
-            <!-- Archive Links & Feedback (Moved outside of removed gundem grid, but kept for utility if needed, or I can remove the whole bottom section.
-                 The user asked to remove "Gündem & Haberler". The Archive section was part of that grid.
-                 I'll remove the whole 'gundem' grid as it contained news and archive.
-                 But the "Archive" part might be useful. The user specifically said "en üstte bulunan son dakika bilgileri... ve en altta güncel ekonomi gündemi".
-                 The Archive links are useful resources. I will keep them but move them out of the 3-column grid structure which is now broken since I removed the news column.
-                 Actually, simpler to remove the news column and keep the archive column, or just remove the whole section as "Gündem & Haberler" is removed from menu.
-                 The user said "Gündem & Haberler bölümünü kaldır". This likely implies the whole section.
-                 I will remove the whole 'gundem' div.
-            -->
-
             <!-- Error Reporting Section (Kept standalone or moved) -->
              <div class="max-w-2xl mx-auto mt-12">
-                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 text-center">
-                    <div class="font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 text-center transition-colors duration-300">
+                    <div class="font-bold text-slate-800 dark:text-white mb-2 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-triangle-exclamation text-red-500"></i> Veri Hatası mı?
                     </div>
-                    <p class="text-sm text-slate-500 mb-4">Tarihsel verilerde bir yanlışlık fark ettiyseniz lütfen bize bildirin.</p>
-                    <button onclick="openModal('errorModal')" class="bg-white border border-red-200 text-red-600 font-bold py-2 px-6 rounded-lg text-sm hover:bg-red-50 transition-colors shadow-sm">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Tarihsel verilerde bir yanlışlık fark ettiyseniz lütfen bize bildirin.</p>
+                    <button onclick="openModal('errorModal')" class="bg-white dark:bg-slate-700 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 font-bold py-2 px-6 rounded-lg text-sm hover:bg-red-50 dark:hover:bg-slate-600 transition-colors shadow-sm">
                         Hata Bildir
                     </button>
                 </div>
@@ -222,14 +223,14 @@
     <!-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8"><div class="w-full h-32 bg-slate-100 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 font-bold">REKLAM ALANI (Responsive)</div></div> -->
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-8 mt-12">
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8 mt-12 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-sm text-slate-500 max-w-3xl mx-auto leading-relaxed">
+            <p class="text-sm text-slate-500 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
                 <i class="fa-solid fa-circle-check text-green-500 mr-1"></i>
                 <strong>Veri Kaynakları:</strong> TCMB, TÜİK, Petrol Ofisi Arşiv, Altınkaynak, CoinMarketCap ve Yerelsen Veriler. <br>
                 <span class="text-xs block mt-2 opacity-75">* 2005 öncesi veriler YTL dönüşümü yapılarak hesaplanmıştır. Kripto varlıklar için ilgili tarihteki açılış fiyatları baz alınır.</span>
             </p>
-            <p class="text-sm font-bold text-slate-800 mt-6">FİNANS HAFIZA &copy; 2026</p>
+            <p class="text-sm font-bold text-slate-800 dark:text-slate-300 mt-6">FİNANS HAFIZA &copy; 2026</p>
         </div>
     </footer>
 
@@ -237,16 +238,16 @@
 
     <!-- Error Reporting Modal -->
     <div id="errorModal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full relative shadow-2xl">
-            <button onclick="closeModal('errorModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 max-w-md w-full relative shadow-2xl">
+            <button onclick="closeModal('errorModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
             <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400">
                     <i class="fa-solid fa-bug"></i>
                 </div>
-                <h3 class="text-xl font-bold text-slate-900">Hata Bildir</h3>
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Hata Bildir</h3>
             </div>
             <form onsubmit="event.preventDefault(); alert('Geri bildiriminiz alındı. Teşekkürler!'); closeModal('errorModal');" class="space-y-4">
-                <textarea class="w-full border border-slate-300 bg-slate-50 p-3 rounded-xl text-sm h-32 outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Hangi veri hatalı?"></textarea>
+                <textarea class="w-full border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 dark:text-white p-3 rounded-xl text-sm h-32 outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Hangi veri hatalı?"></textarea>
                 <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-colors">Bildirimi Gönder</button>
             </form>
         </div>
@@ -368,8 +369,8 @@
                 checkbox.checked = isDefault;
 
                 const display = document.createElement('div');
-                display.className = "border border-slate-200 bg-white text-slate-600 px-3 py-2 rounded-lg text-sm font-medium transition-all group-hover:border-orange-300 select-none shadow-sm flex items-center gap-2";
-                display.innerHTML = `<i class="${itemLabels[key].icon} text-slate-400"></i> ${itemLabels[key].label}`;
+                display.className = "border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-2 rounded-lg text-sm font-medium transition-all group-hover:border-orange-300 dark:group-hover:border-orange-500 select-none shadow-sm flex items-center gap-2";
+                display.innerHTML = `<i class="${itemLabels[key].icon} text-slate-400 dark:text-slate-500"></i> ${itemLabels[key].label}`;
 
                 wrapper.appendChild(checkbox);
                 wrapper.appendChild(display);
@@ -408,7 +409,8 @@
             const salarySelect = document.getElementById('salarySelect');
             const salaryText = salarySelect.options[salarySelect.selectedIndex].text;
 
-            currentShareText = `Finansal Hafıza (${selectedYear} vs 2026) - ${salaryText}:\n`;
+            // Build Share Text
+            currentShareText = `Finansal Hafıza Raporu\n${salaryText}na göre ${selectedYear} yılında`;
 
             selectedItems.forEach((key, index) => {
                 const pricePast = historicalData[selectedYear].items[key];
@@ -418,12 +420,12 @@
                 // If price is 0 or undefined, show "Data Not Found" card
                 if (!pricePast || pricePast === 0) {
                      const errorHtml = `
-                     <div class="bg-slate-100 rounded-2xl p-6 border border-slate-200 border-dashed flex flex-col items-center justify-center text-center h-64">
-                        <div class="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                     <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 border-dashed flex flex-col items-center justify-center text-center h-64">
+                        <div class="w-16 h-16 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4 text-slate-400">
                             <i class="${itemLabels[key].icon} text-3xl"></i>
                         </div>
-                        <h3 class="font-bold text-slate-700 text-lg mb-1">${itemLabels[key].label}</h3>
-                        <p class="text-slate-500 text-sm max-w-xs">
+                        <h3 class="font-bold text-slate-700 dark:text-white text-lg mb-1">${itemLabels[key].label}</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-xs">
                             <span class="font-bold text-orange-600">${selectedYear}</span> yılında bu ürün piyasada bulunmuyordu veya güvenilir veri kaynağı yok.
                         </p>
                      </div>
@@ -435,7 +437,7 @@
                 const countPast = (salaryPast / pricePast).toFixed(2);
                 const countNow = (salaryNow / priceNow).toFixed(2);
 
-                currentShareText += `${itemLabels[key].label}: ${countPast} -> ${countNow}\n`;
+                currentShareText += ` ${countPast} ${itemLabels[key].unit} ${itemLabels[key].label} alınırken 2026 yılında ${countNow} ${itemLabels[key].unit} ${itemLabels[key].label} alınabiliyor.\n`;
 
                 const wrapperId = `chart-wrapper-${index}`;
                 const canvasId = `canvas-${index}`;
@@ -446,7 +448,7 @@
                 const priceDisplayNow = formatMoney(priceNow, currentYear);
 
                 const html = `
-                <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-2xl relative overflow-hidden group" id="${wrapperId}">
+                <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-2xl relative overflow-hidden group border border-slate-700" id="${wrapperId}">
                      <div class="absolute right-0 top-0 h-full w-2/3 bg-gradient-to-l from-slate-800 to-transparent opacity-50 group-hover:opacity-60 transition-opacity"></div>
                      <div class="absolute -right-10 -bottom-10 text-9xl text-white opacity-5"><i class="${itemLabels[key].icon}"></i></div>
 
@@ -494,7 +496,7 @@
                 chartsContainer.innerHTML += html;
             });
 
-            currentShareText += "\nAlım gücüm eridi mi?";
+            currentShareText += "\nSizce alım gücüm azaldı mı?";
 
             // Init Charts (Delayed to ensure DOM is ready)
             setTimeout(() => {
@@ -526,18 +528,18 @@
                 const isPositive = diff >= 0;
 
                 const cardHtml = `
-                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
                         <div class="flex justify-between items-start mb-3">
-                             <div class="font-bold text-sm text-slate-700 flex items-center gap-2">
-                                <i class="${itemLabels[key].icon} text-slate-400"></i> ${itemLabels[key].label}
+                             <div class="font-bold text-sm text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                                <i class="${itemLabels[key].icon} text-slate-400 dark:text-slate-500"></i> ${itemLabels[key].label}
                              </div>
-                             <div class="text-xs ${isPositive ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'} px-2 py-1 rounded-md font-bold">
+                             <div class="text-xs ${isPositive ? 'text-green-700 bg-green-100 dark:bg-green-900/30 dark:text-green-400' : 'text-red-700 bg-red-100 dark:bg-red-900/30 dark:text-red-400'} px-2 py-1 rounded-md font-bold">
                                 ${isPositive ? '+' : ''}${diff.toFixed(1)}
                              </div>
                         </div>
-                        <div class="flex justify-between text-xs text-slate-500 border-t border-slate-100 pt-3">
-                            <div><span class="block text-[10px] uppercase text-slate-400">${selectedYear}</span><span class="font-bold text-slate-800 text-sm">${cPast}</span></div>
-                            <div class="text-right"><span class="block text-[10px] uppercase text-slate-400">2026</span><span class="font-bold text-slate-800 text-sm">${cNow}</span></div>
+                        <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-700 pt-3">
+                            <div><span class="block text-[10px] uppercase text-slate-400 dark:text-slate-500">${selectedYear}</span><span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${cPast}</span></div>
+                            <div class="text-right"><span class="block text-[10px] uppercase text-slate-400 dark:text-slate-500">2026</span><span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${cNow}</span></div>
                         </div>
                     </div>
                 `;
@@ -598,6 +600,7 @@
             const text = encodeURIComponent(currentShareText + "\nhttps://finansalhafiza.app");
             const urls = {
                 twitter: `https://twitter.com/intent/tweet?text=${text}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=https://finansalhafiza.app&quote=${text}`,
                 whatsapp: `https://wa.me/?text=${text}`,
                 linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=https://finansalhafiza.app`
             };
