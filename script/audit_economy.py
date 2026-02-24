@@ -1,31 +1,37 @@
 import requests
 import re
 import os
+import sys
 
 def fetch_data():
     data = {}
     try:
         # Fetch USD and EUR
         r = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
-        if r.status_code == 200:
-            rates = r.json().get('rates', {})
-            usd_try = rates.get('TRY', 0)
-            eur_try = usd_try / rates.get('EUR', 1)
 
-            data['dolar'] = round(usd_try, 2)
-            data['euro'] = round(eur_try, 2)
+        if r.status_code != 200:
+            print(f"Error: API returned status code {r.status_code}")
+            sys.exit(1)
 
-            # Estimate Gold
-            # Spot gold ~2650 USD/oz (Approximate current market value)
-            spot_gold_usd = 2650
-            gram_gold_usd = spot_gold_usd / 31.1035
-            gram_gold_try = gram_gold_usd * usd_try
+        rates = r.json().get('rates', {})
+        usd_try = rates.get('TRY', 0)
+        eur_try = usd_try / rates.get('EUR', 1)
 
-            data['gram'] = int(gram_gold_try)
-            data['ceyrek'] = int(gram_gold_try * 1.605 * 1.05) # 1.605g + 5% margin
+        data['dolar'] = round(usd_try, 2)
+        data['euro'] = round(eur_try, 2)
+
+        # Estimate Gold
+        # Spot gold ~2650 USD/oz (Approximate current market value)
+        spot_gold_usd = 2650
+        gram_gold_usd = spot_gold_usd / 31.1035
+        gram_gold_try = gram_gold_usd * usd_try
+
+        data['gram'] = int(gram_gold_try)
+        data['ceyrek'] = int(gram_gold_try * 1.605 * 1.05) # 1.605g + 5% margin
 
     except Exception as e:
         print(f"Error fetching data: {e}")
+        sys.exit(1)
 
     return data
 
