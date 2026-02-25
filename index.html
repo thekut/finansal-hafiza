@@ -59,8 +59,9 @@
             padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;
             transition: all 0.2s; color: white;
         }
-        .share-twitter { background-color: #000000; color: #ffffff !important; -webkit-text-fill-color: #ffffff; }
-        .share-twitter:hover { background-color: #333333; }
+        .share-twitter { background-color: #ffffff; color: #000000 !important; -webkit-text-fill-color: #000000; border: 1px solid #e2e8f0; }
+        .share-twitter:hover { background-color: #f1f5f9; }
+        .dark .share-twitter { border-color: #475569; }
         .share-facebook { background-color: #1877F2; }
         .share-facebook:hover { background-color: #166fe5; }
         .share-whatsapp { background-color: #25D366; }
@@ -90,12 +91,15 @@
             </div>
             
             <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500 dark:text-slate-400">
-                <a href="#analiz" class="hover:text-orange-600 dark:hover:text-orange-500 transition-colors py-2">Analizler</a>
-                <!-- Gündem & Haberler Removed -->
-                <!-- Premium Button Removed -->
+                <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-orange-600 dark:text-slate-400 dark:hover:text-orange-500 transition-colors text-lg" aria-label="Dark Mode Toggle">
+                    <i id="darkModeIcon" class="fa-solid fa-sun"></i>
+                </button>
             </div>
             
-            <button class="md:hidden text-slate-600 dark:text-slate-400 text-xl"><i class="fa-solid fa-bars"></i></button>
+            <div class="flex items-center gap-4 md:hidden">
+                <button onclick="toggleDarkMode()" class="text-slate-600 dark:text-slate-400 text-lg"><i id="darkModeIconMobile" class="fa-solid fa-sun"></i></button>
+                <button class="text-slate-600 dark:text-slate-400 text-xl"><i class="fa-solid fa-bars"></i></button>
+            </div>
         </div>
     </header>
 
@@ -127,7 +131,7 @@
                             <option value="2002">2002 (Kriz Sonrası)</option>
                             <option value="2010">2010 (İstikrar Dönemi)</option>
                             <option value="2016">2016 (Kırılma Yılı)</option>
-                            <option value="2020">2020 (Pandemi)</option>
+                            <option value="2020" selected>2020 (Pandemi)</option>
                             <option value="2024">2024 (Geçen Yıl)</option>
                         </select>
                     </div>
@@ -138,7 +142,7 @@
                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Gelir Grubu / Baz Maaş</label>
                     <div class="relative">
                         <select id="salarySelect" class="w-full h-14 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white text-base rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 block px-4 font-medium transition-smooth shadow-sm cursor-pointer">
-                            <option value="asgari">Asgari Ücret (Net)</option>
+                            <option value="asgari" selected>Asgari Ücret (Net)</option>
                             <option value="emekli">En Düşük Emekli Maaşı</option>
                             <option value="memur">Ortalama Memur Maaşı</option>
                             <option value="doktor">Uzman Doktor (1/4)</option>
@@ -197,10 +201,8 @@
                 <!-- Charts or Warnings will be injected here -->
             </div>
 
-            <!-- Detailed Grid Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="itemsGrid">
-                <!-- Small Cards injected here -->
-            </div>
+            <!-- Detailed Grid Cards Removed (Consolidated into Main Charts) -->
+            <div id="itemsGrid" class="hidden"></div>
 
             <!-- Error Reporting Section (Kept standalone or moved) -->
              <div class="max-w-2xl mx-auto mt-12">
@@ -323,10 +325,10 @@
                 note: "Güncel (Ocak 2026)",
                 salaries: { asgari: 28075, emekli: 18500, memur: 49000, doktor: 92000, polis: 62000 }, 
                 items: {
-                    ceyrek: 6296, gram: 3735, dolar: 43.85, euro: 51.71, benzin: 51, ekmek: 15,
+                    ceyrek: 12479, gram: 7563, dolar: 43.86, euro: 51.66, benzin: 51, ekmek: 15,
                     bira: 110, doner: 400, elektrik: 1300, tavuk: 180, kuzu: 900, sut: 60, peynir: 500, 
                     zeytin: 450, kira_ist: 32000, ev_ist: 6000000, 
-                    iphone: 89000, bigmac: 240, btc: 3887000, nst: 112 
+                    iphone: 89000, bigmac: 240, btc: 2871927, nst: 52.03
                 }
             }
         };
@@ -358,7 +360,7 @@
         function initFilters() {
             const container = document.getElementById('itemFilters');
             Object.keys(itemLabels).forEach(key => {
-                const isDefault = ['ceyrek', 'ekmek', 'benzin'].includes(key);
+                const isDefault = ['doner'].includes(key);
                 const wrapper = document.createElement('label');
                 wrapper.className = "cursor-pointer group relative";
                 
@@ -447,6 +449,15 @@
                 const priceDisplayPast = formatMoney(pricePast, selectedYear);
                 const priceDisplayNow = formatMoney(priceNow, currentYear);
 
+                // Calculate Diff/Trend for Main Card
+                const cPast = parseFloat(countPast);
+                const cNow = parseFloat(countNow);
+                const diff = cNow - cPast;
+                const isPositive = diff >= 0;
+                const diffColorClass = isPositive ? 'text-green-400' : 'text-red-400';
+                const diffIcon = isPositive ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
+                const diffSign = isPositive ? '+' : '';
+
                 const html = `
                 <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-2xl relative overflow-hidden group border border-slate-700" id="${wrapperId}">
                      <div class="absolute right-0 top-0 h-full w-2/3 bg-gradient-to-l from-slate-800 to-transparent opacity-50 group-hover:opacity-60 transition-opacity"></div>
@@ -454,11 +465,17 @@
 
                      <div class="flex flex-col md:flex-row gap-8 relative z-10">
                         <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-6">
-                                <div class="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-900/50"><i class="${itemLabels[key].icon} text-lg"></i></div>
-                                <div>
-                                    <h3 class="font-black text-xl tracking-tight">${itemLabels[key].label}</h3>
-                                    <div class="text-xs text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded inline-block mt-1">Kaynak: ${itemLabels[key].source}</div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center shadow-lg shadow-orange-900/50"><i class="${itemLabels[key].icon} text-lg"></i></div>
+                                    <div>
+                                        <h3 class="font-black text-xl tracking-tight">${itemLabels[key].label}</h3>
+                                        <div class="text-xs text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded inline-block mt-1">Kaynak: ${itemLabels[key].source}</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-black ${diffColorClass}">${diffSign}${diff.toFixed(2)}</div>
+                                    <div class="text-xs text-slate-400 font-bold uppercase tracking-wider">Değişim (${itemLabels[key].unit})</div>
                                 </div>
                             </div>
 
@@ -513,39 +530,7 @@
                 });
             }, 50);
 
-            // GRID CARDS
-            const grid = document.getElementById('itemsGrid');
-            grid.innerHTML = '';
-            
-            selectedItems.forEach(key => {
-                const pPast = historicalData[selectedYear].items[key];
-                if (!pPast || pPast === 0) return;
-
-                const pNow = historicalData[currentYear].items[key];
-                const cPast = (salaryPast / pPast).toFixed(1);
-                const cNow = (salaryNow / pNow).toFixed(1);
-                const diff = cNow - cPast;
-                const isPositive = diff >= 0;
-
-                const cardHtml = `
-                    <div class="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
-                        <div class="flex justify-between items-start mb-3">
-                             <div class="font-bold text-sm text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                                <i class="${itemLabels[key].icon} text-slate-400 dark:text-slate-500"></i> ${itemLabels[key].label}
-                             </div>
-                             <div class="text-xs ${isPositive ? 'text-green-700 bg-green-100 dark:bg-green-900/30 dark:text-green-400' : 'text-red-700 bg-red-100 dark:bg-red-900/30 dark:text-red-400'} px-2 py-1 rounded-md font-bold">
-                                ${isPositive ? '+' : ''}${diff.toFixed(1)}
-                             </div>
-                        </div>
-                        <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-700 pt-3">
-                            <div><span class="block text-[10px] uppercase text-slate-400 dark:text-slate-500">${selectedYear}</span><span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${cPast}</span></div>
-                            <div class="text-right"><span class="block text-[10px] uppercase text-slate-400 dark:text-slate-500">2026</span><span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${cNow}</span></div>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += cardHtml;
-            });
-            
+            // GRID CARDS REMOVED
             document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -610,7 +595,40 @@
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+            updateDarkModeIcons(isDark);
+        }
+
+        function updateDarkModeIcons(isDark) {
+            const iconClass = isDark ? 'fa-sun' : 'fa-moon';
+            ['darkModeIcon', 'darkModeIconMobile'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.className = `fa-solid ${iconClass}`;
+            });
+        }
+
         window.onload = function() {
+            // Dark Mode Init
+            const savedMode = localStorage.getItem('darkMode');
+            const systemMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            let isDark = true; // Default to Dark
+
+            if (savedMode !== null) {
+                isDark = savedMode === 'true';
+            } else {
+                 isDark = true; // Force default dark
+            }
+
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            updateDarkModeIcons(isDark);
+
             initFilters();
             ['premiumModal', 'errorModal'].forEach(id => {
                 const modal = document.getElementById(id);

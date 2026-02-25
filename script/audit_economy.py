@@ -1,37 +1,69 @@
 import requests
 import re
-import os
 import sys
+import time
 
 def fetch_data():
     data = {}
+    print("Starting data fetch...")
+
+    # 1. Currency (USD, EUR)
     try:
-        # Fetch USD and EUR
-        r = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
-
-        if r.status_code != 200:
-            print(f"Error: API returned status code {r.status_code}")
-            sys.exit(1)
-
+        print("Fetching Currencies...")
+        r = requests.get("https://api.exchangerate-api.com/v4/latest/USD", timeout=10)
         rates = r.json().get('rates', {})
         usd_try = rates.get('TRY', 0)
         eur_try = usd_try / rates.get('EUR', 1)
 
-        data['dolar'] = round(usd_try, 2)
-        data['euro'] = round(eur_try, 2)
+        if usd_try > 0:
+            data['dolar'] = round(usd_try, 2)
+            data['euro'] = round(eur_try, 2)
+            print(f"USD: {data['dolar']}, EUR: {data['euro']}")
+    except Exception as e:
+        print(f"Failed to fetch Currency: {e}")
 
-        # Estimate Gold
-        # Spot gold ~2650 USD/oz (Approximate current market value)
-        spot_gold_usd = 2650
-        gram_gold_usd = spot_gold_usd / 31.1035
-        gram_gold_try = gram_gold_usd * usd_try
+    # 2. Crypto (BTC, NST) & Gold (via PAXG)
+    try:
+        print("Fetching Crypto & Gold (via PAXG)...")
+        # Added retry logic
+        for _ in range(3):
+            r = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ninja-squad,pax-gold&vs_currencies=try", timeout=10)
+            if r.status_code == 200:
+                break
+            time.sleep(2)
 
-        data['gram'] = int(gram_gold_try)
-        data['ceyrek'] = int(gram_gold_try * 1.605 * 1.05) # 1.605g + 5% margin
+        c = r.json()
+
+        if 'bitcoin' in c:
+            data['btc'] = int(c['bitcoin']['try'])
+            print(f"BTC: {data['btc']}")
+
+        if 'ninja-squad' in c:
+            data['nst'] = round(c['ninja-squad']['try'], 2)
+            print(f"NST: {data['nst']}")
+
+        if 'pax-gold' in c:
+            paxg_try = c['pax-gold']['try']
+            # 1 Troy Ounce = 31.1034768 Grams
+            gram_spot = paxg_try / 31.1035
+
+            # Physical Market Premium (Turkey specific)
+            # Spot usually lower than physical market (Kapalıçarşı)
+            # Adding ~3% spread
+            gram_market = gram_spot * 1.03
+
+            data['gram'] = int(gram_market)
+
+            # Quarter Gold Calculation
+            # Theoretical: 1.754g total, 22k (0.916)
+            # Market Price usually follows: Gram Price * 1.63 to 1.67 depending on workmanship
+            # Using 1.65 multiplier
+            data['ceyrek'] = int(gram_market * 1.65)
+
+            print(f"Gram Gold: {data['gram']}, Quarter Gold: {data['ceyrek']}")
 
     except Exception as e:
-        print(f"Error fetching data: {e}")
-        sys.exit(1)
+        print(f"Failed to fetch Crypto/Gold: {e}")
 
     return data
 
@@ -44,15 +76,19 @@ def update_index(data):
         print(f"{filepath} not found.")
         return
 
-    # Locate 2026 items block
+    # Strategy: Locate the "2026" items block using regex
     # We look for "2026": { ... items: { ... } }
-    # Strategy: Find the start of 2026 items
+
+    # 1. Find the start of 2026 items
+    # Matches: "2026": { ... items: {
     pattern_start = r'("2026"\s*:\s*\{.*?items\s*:\s*\{)'
     match = re.search(pattern_start, content, re.DOTALL)
     
     if match:
         start_idx = match.end()
-        # Find the closing brace of items
+        # Find the closing brace of the items object
+        # We need to be careful about nested braces, but items usually contains simple key-values
+        # Just searching for the next '}' might be safe enough for this structure
         end_idx = content.find("}", start_idx)
 
         if end_idx == -1:
@@ -60,28 +96,35 @@ def update_index(data):
             return
 
         items_block = content[start_idx:end_idx]
+        original_block = items_block
 
-        # Replace values
-        if 'dolar' in data:
-            items_block = re.sub(r'(dolar\s*:\s*)[\d.]+', f'\\g<1>{data["dolar"]}', items_block)
-        if 'euro' in data:
-            items_block = re.sub(r'(euro\s*:\s*)[\d.]+', f'\\g<1>{data["euro"]}', items_block)
-        if 'gram' in data:
-            items_block = re.sub(r'(gram\s*:\s*)[\d.]+', f'\\g<1>{data["gram"]}', items_block)
-        if 'ceyrek' in data:
-            items_block = re.sub(r'(ceyrek\s*:\s*)[\d.]+', f'\\g<1>{data["ceyrek"]}', items_block)
+        # Helper to replace key value
+        def replace_val(key, val, text):
+            # Matches key: number, or key: number.decimal
+            return re.sub(r'(\b' + key + r'\b\s*:\s*)([\d.]+)', f'\\g<1>{val}', text)
 
-        new_content = content[:start_idx] + items_block + content[end_idx:]
+        if 'dolar' in data: items_block = replace_val('dolar', data['dolar'], items_block)
+        if 'euro' in data: items_block = replace_val('euro', data['euro'], items_block)
+        if 'gram' in data: items_block = replace_val('gram', data['gram'], items_block)
+        if 'ceyrek' in data: items_block = replace_val('ceyrek', data['ceyrek'], items_block)
+        if 'btc' in data: items_block = replace_val('btc', data['btc'], items_block)
+        if 'nst' in data: items_block = replace_val('nst', data['nst'], items_block)
 
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(new_content)
-        print("index.html updated successfully.")
+        if items_block != original_block:
+            new_content = content[:start_idx] + items_block + content[end_idx:]
+            with open(filepath, "w", encoding="utf-8") as f:
+                f.write(new_content)
+            print("index.html updated successfully.")
+        else:
+            print("No changes made to index.html (Data might be same).")
 
     else:
-        print("Could not find 2026 items block.")
+        print("Could not find 2026 items block structure.")
 
 if __name__ == "__main__":
     data = fetch_data()
-    print(f"Fetched data: {data}")
     if data:
         update_index(data)
+    else:
+        print("No data fetched.")
+        sys.exit(1)
