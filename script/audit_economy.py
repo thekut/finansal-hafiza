@@ -2,15 +2,28 @@ import requests
 import re
 import sys
 import time
+import traceback
 
 def fetch_data():
     data = {}
     print("Starting data fetch...")
 
     # 1. Currency (USD, EUR)
+    r = None
     try:
         print("Fetching Currencies...")
-        r = requests.get("https://api.exchangerate-api.com/v4/latest/USD", timeout=10)
+        for _ in range(3):
+            try:
+                r = requests.get("https://api.exchangerate-api.com/v4/latest/USD", timeout=10)
+                if r.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                time.sleep(2)
+                continue
+
+        if r is None or r.status_code != 200:
+             raise Exception(f"API Error or Unreachable. Status: {r.status_code if r else 'None'}")
+
         rates = r.json().get('rates', {})
         usd_try = rates.get('TRY', 0)
         eur_try = usd_try / rates.get('EUR', 1)
@@ -21,16 +34,25 @@ def fetch_data():
             print(f"USD: {data['dolar']}, EUR: {data['euro']}")
     except Exception as e:
         print(f"Failed to fetch Currency: {e}")
+        traceback.print_exc()
 
     # 2. Crypto (BTC, NST) & Gold (via PAXG)
+    r = None
     try:
         print("Fetching Crypto & Gold (via PAXG)...")
         # Added retry logic
         for _ in range(3):
-            r = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ninja-squad,pax-gold&vs_currencies=try", timeout=10)
-            if r.status_code == 200:
-                break
+            try:
+                r = requests.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ninja-squad,pax-gold&vs_currencies=try", timeout=10)
+                if r.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                time.sleep(2)
+                continue
             time.sleep(2)
+
+        if r is None or r.status_code != 200:
+             raise Exception(f"Crypto API Error. Status: {r.status_code if r else 'None'}")
 
         c = r.json()
 
@@ -64,6 +86,7 @@ def fetch_data():
 
     except Exception as e:
         print(f"Failed to fetch Crypto/Gold: {e}")
+        traceback.print_exc()
 
     return data
 
